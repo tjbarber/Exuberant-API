@@ -7,6 +7,7 @@ var bodyParser = require('body-parser');
 var config = require('./config/config');
 var routes = require('./routes/metadata');
 var users = require('./routes/user');
+var stats = require('./routes/stats');
 
 var app = express();
 
@@ -32,6 +33,7 @@ app.use(function(req, res, next) {
 
 app.use('/metadata', routes);
 app.use('/user', users);
+app.use('/stats', stats);
 
 /// catch 404 and forward to error handler
 app.use(function(req, res, next) {

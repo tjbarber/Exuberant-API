@@ -5,11 +5,8 @@ var redis  = require('../lib/redis');
 var request = require('request');
 var zlib = require('zlib');
 
-/* GET home page. */
-
 var standardHeaders = {
   "Ocp-Apim-Subscription-Key": config.apiKeys.h5APIKey,
-  gzip: true
 }
 
 router.get('/maps', function(req, res, next) {
