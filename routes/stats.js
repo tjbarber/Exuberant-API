@@ -10,7 +10,7 @@ var standardHeaders = {
 
 router.get('/matches', function(req, res, next) {
   var player = req.query['player'];
-  var mode   = req.query['mode'];
+  var mode   = req.query['modes'];
   var start  = req.query['start'];
   var count  = req.query['count'];
 
