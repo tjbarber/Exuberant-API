@@ -1,11 +1,12 @@
 var express = require('express');
 var request = require('request');
-var apiKeys = require('../lib/apiKeys');
 var router = express.Router();
 var redis  = require('../lib/redis');
-
+var config = require('../config/config');
+console.log(config.apiKeys);
 /* GET users listing. */
 router.get('/profile', function(req, res, next) {
+  console.log(config);
   var lowercasedGamertag = req.query['gamertag'].toLowerCase();
   
   redis.get(lowercasedGamertag, function(err, reply) {
@@ -16,7 +17,7 @@ router.get('/profile', function(req, res, next) {
         url: 'https://xboxapi.com/v2/xuid/' + req.query['gamertag'],
         headers: {
           'Accept': 'application/json',
-          'X-AUTH': apiKeys.xboxLiveAPIKey
+          'X-AUTH': config.apiKeys.xboxLiveAPIKey
         }
       };
 
@@ -40,7 +41,7 @@ router.get('/profile', function(req, res, next) {
           url: 'https://xboxapi.com/v2/' + xuid + '/profile',
           headers: {
             'Accept': 'application/json',
-            'X-AUTH': apiKeys.xboxLiveAPIKey
+            'X-AUTH': config.apiKeys.xboxLiveAPIKey
           }
         }
 

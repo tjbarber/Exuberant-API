@@ -4,7 +4,7 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
-var apiKeys = require('./lib/apiKeys');
+var config = require('./config/config');
 var routes = require('./routes/metadata');
 var users = require('./routes/user');
 
@@ -22,7 +22,7 @@ app.use(bodyParser.urlencoded({
 app.use(cookieParser());
 
 app.use(function(req, res, next) {
-    if ([apiKeys.xboxLiveAPIKey, apiKeys.h5APIKey].indexOf(req.headers['x-api-key']) === -1) {
+    if ([config.apiKeys.xboxLiveAPIKey, config.apiKeys.h5APIKey].indexOf(req.headers['x-api-key']) === -1) {
         var err = new Error('Unauthorized request.');
         err.status = 500;
         next(err);
