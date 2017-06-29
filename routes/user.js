@@ -6,9 +6,7 @@ var config = require('../config/config');
 console.log(config.apiKeys);
 /* GET users listing. */
 router.get('/profile', function(req, res, next) {
-  console.log(config);
   var lowercasedGamertag = req.query['gamertag'].toLowerCase();
-  
   redis.get(lowercasedGamertag, function(err, reply) {
     if (reply) {
       res.send(JSON.parse(reply));
