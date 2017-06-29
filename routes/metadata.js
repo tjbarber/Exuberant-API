@@ -25,6 +25,12 @@ router.get('/maps', function(req, res, next) {
       var data = "";
       var dataStream = request(requestObject).pipe(zlib.createGunzip());
 
+      dataStream.on('error', function(error) {
+        var err = new Error(error.message);
+        err.status = 500;
+        next(err);
+      });
+
       dataStream.on('data', function(chunk) {
         data += chunk
       });
