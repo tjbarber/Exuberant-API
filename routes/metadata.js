@@ -8,7 +8,8 @@ var zlib = require('zlib');
 /* GET home page. */
 
 var standardHeaders = {
-  "Ocp-Apim-Subscription-Key": config.apiKeys.h5APIKey
+  "Ocp-Apim-Subscription-Key": config.apiKeys.h5APIKey,
+  gzip: true
 }
 
 router.get('/maps', function(req, res, next) {
@@ -21,22 +22,15 @@ router.get('/maps', function(req, res, next) {
         headers: standardHeaders
       }
 
-      var data = "";
-      var dataStream = request(requestObject).pipe(zlib.createGunzip());
+      request(requestObject, function(error, response, body) {
+        if (err) {
+          var err = new Error(error.message);
+          err.status = 500;
+          next(err);
+        }
 
-      dataStream.on('error', function(error) {
-        var err = new Error(error.message);
-        err.status = 500;
-        next(err);
-      });
-
-      dataStream.on('data', function(chunk) {
-        data += chunk;
-      });
-
-      dataStream.on('end', function() {
-        redis.set('maps', data, 'EX', 86400);
-        res.send(JSON.parse(data));
+        redis.set('maps', body, 'EX', 86400);
+        res.send(JSON.parse(body));
       });
     }
   });
