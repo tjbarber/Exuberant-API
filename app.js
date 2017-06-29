@@ -27,7 +27,6 @@ app.use(function(req, res, next) {
         err.status = 500;
         next(err);
     }
-
     next();
 });
 

@@ -8,8 +8,7 @@ var zlib = require('zlib');
 /* GET home page. */
 
 var standardHeaders = {
-  "Ocp-Apim-Subscription-Key": config.apiKeys.h5APIKey,
-  gzip: true
+  "Ocp-Apim-Subscription-Key": config.apiKeys.h5APIKey
 }
 
 router.get('/maps', function(req, res, next) {
@@ -32,7 +31,7 @@ router.get('/maps', function(req, res, next) {
       });
 
       dataStream.on('data', function(chunk) {
-        data += chunk
+        data += chunk;
       });
 
       dataStream.on('end', function() {

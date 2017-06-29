@@ -3,7 +3,7 @@ var request = require('request');
 var router = express.Router();
 var redis  = require('../lib/redis');
 var config = require('../config/config');
-console.log(config.apiKeys);
+
 /* GET users listing. */
 router.get('/profile', function(req, res, next) {
   var lowercasedGamertag = req.query['gamertag'].toLowerCase();
