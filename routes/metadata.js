@@ -7,6 +7,7 @@ var zlib = require('zlib');
 
 var standardHeaders = {
   "Ocp-Apim-Subscription-Key": config.apiKeys.h5APIKey,
+  gzip: true
 }
 
 router.get('/maps', function(req, res, next) {
