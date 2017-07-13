@@ -1,73 +1,60 @@
-var express = require('express');
-var path = require('path');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
+/**
+ * app.js
+ *
+ * Use `app.js` to run your app without `sails lift`.
+ * To start the server, run: `node app.js`.
+ *
+ * This is handy in situations where the sails CLI is not relevant or useful.
+ *
+ * For example:
+ *   => `node app.js`
+ *   => `forever start app.js`
+ *   => `node debug app.js`
+ *   => `modulus deploy`
+ *   => `heroku scale`
+ *
+ *
+ * The same command-line arguments are supported, e.g.:
+ * `node app.js --silent --port=80 --prod`
+ */
 
-var config = require('./config/config');
-var routes = require('./routes/metadata');
-var users = require('./routes/user');
-var stats = require('./routes/stats');
 
-var app = express();
+// Ensure we're in the project directory, so cwd-relative paths work as expected
+// no matter where we actually lift from.
+// > Note: This is not required in order to lift, but it is a convenient default.
+process.chdir(__dirname);
 
-var env = process.env.NODE_ENV || 'development';
-app.locals.ENV = env;
-app.locals.ENV_DEVELOPMENT = env == 'development';
-
-app.use(logger('dev'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({
-  extended: true
-}));
-app.use(cookieParser());
-
-app.use(function(req, res, next) {
-    if ([config.apiKeys.xboxLiveAPIKey, config.apiKeys.h5APIKey].indexOf(req.headers['x-api-key']) === -1) {
-        var err = new Error('Unauthorized request.');
-        err.status = 500;
-        next(err);
-    }
-    next();
-});
-
-app.use('/metadata', routes);
-app.use('/user', users);
-app.use('/stats', stats);
-
-/// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-    var err = new Error('Not Found');
-    err.status = 404;
-    next(err);
-});
-
-/// error handlers
-
-// development error handler
-// will print stacktrace
-
-if (app.get('env') === 'development') {
-    app.use(function(err, req, res, next) {
-        res.status(err.status || 500);
-        res.send({
-            message: err.message,
-            error: err,
-            title: 'error'
-        });
-    });
+// Attempt to import `sails`.
+var sails;
+try {
+  sails = require('sails');
+} catch (e) {
+  console.error('To run an app using `node app.js`, you usually need to have a version of `sails` installed in the same directory as your app.');
+  console.error('To do that, run `npm install sails`');
+  console.error('');
+  console.error('Alternatively, if you have sails installed globally (i.e. you did `npm install -g sails`), you can use `sails lift`.');
+  console.error('When you run `sails lift`, your app will still use a local `./node_modules/sails` dependency if it exists,');
+  console.error('but if it doesn\'t, the app will run with the global sails instead!');
+  return;
 }
 
-// production error handler
-// no stacktraces leaked to user
-app.use(function(err, req, res, next) {
-    res.status(err.status || 500);
-    res.send({
-        message: err.message,
-        error: {},
-        title: 'error'
-    });
-});
+// --•
+// Try to get `rc` dependency (for loading `.sailsrc` files).
+var rc;
+try {
+  rc = require('rc');
+} catch (e0) {
+  try {
+    rc = require('sails/node_modules/rc');
+  } catch (e1) {
+    console.error('Could not find dependency: `rc`.');
+    console.error('Your `.sailsrc` file(s) will be ignored.');
+    console.error('To resolve this, run:');
+    console.error('npm install rc --save');
+    rc = function () { return {}; };
+  }
+}
 
 
-module.exports = app;
+// Start server
+sails.lift(rc('sails'));
