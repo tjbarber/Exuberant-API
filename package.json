@@ -1,9 +1,16 @@
 {
   "name": "Exuberant-API",
   "private": true,
-  "version": "0.0.0",
-  "description": "a Sails application",
+  "version": "0.1.0",
+  "description": "Exuberant",
   "keywords": [],
+  "scripts": {
+    "start": "node app.js --prod"
+  },
+  "engines": {
+    "node": "7.10.1",
+    "npm": "5.1.0"
+  },
   "dependencies": {
     "ejs": "2.3.4",
     "grunt": "1.0.1",
