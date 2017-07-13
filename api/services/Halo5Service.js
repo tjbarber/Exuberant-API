@@ -9,7 +9,7 @@ module.exports = {
         mode = options.mode,
         start = options.start,
         count = options.count;
-      
+
       sails.request({
         url: 'https://www.haloapi.com/stats/h5/players/' + player + '/matches?modes=' + mode + '&start=' + start + '&count=' + count, 
         headers: standardHeaders
@@ -18,13 +18,17 @@ module.exports = {
           return done(error)
         }
 
+        if (body.length === 0) {
+          body = "{}";
+        }
+
         return done(JSON.parse(body));
       });
     },
     getServiceRecord: function(options, done) {
       var player = options.player;
 
-      request({
+      sails.request({
         url: 'https://www.haloapi.com/stats/h5/servicerecords/arena?players=' + player,
         headers: standardHeaders
       }, function(error, response, body) { 
