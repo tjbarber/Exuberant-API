@@ -26,6 +26,11 @@ module.exports = {
       return res.send(data);
     });
   },
+  match: function(req, res) {
+    Halo5Service.stats.getMatch({matchId: req.query['matchId']}, function(data) { 
+      return res.send(data);
+    });
+  },
   servicerecord: function(req, res) {
     Halo5Service.stats.getServiceRecord({player: req.query['player']}, function(data) {
       return res.send(data);

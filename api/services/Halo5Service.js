@@ -47,6 +47,18 @@ module.exports = {
         return done(modifiedResults);
       });
     },
+    getMatch: function(options, done) {
+      sails.request({
+        url: "https://www.haloapi.com/stats/h5/arena/matches/" + options.matchId,
+        headers: standardHeaders
+      }, function(error, response, body) {
+        if (error) {
+          return done(err)
+        }
+
+        return done(JSON.parse(body));
+      });
+    },
     getServiceRecord: function(options, done) {
       var player = options.player;
 
@@ -54,10 +66,10 @@ module.exports = {
         url: 'https://www.haloapi.com/stats/h5/servicerecords/arena?players=' + player,
         headers: standardHeaders
       }, function(error, response, body) { 
-        if (error) {
-          return done(err)
-        }
         
+        // Sometimes this crashes with status code 429:
+        // 'Rate limit is exceeded. Try again in 4 seconds.'
+
         var parsedBody = JSON.parse(body);
         delete parsedBody['Results'][0]['Result']['ArenaStats']['ArenaPlaylistStats'];
         delete parsedBody['Results'][0]['Result']['ArenaStats']['ArenaGameBaseVariantStats'];
